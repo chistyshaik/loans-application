@@ -176,6 +176,26 @@ app.post('/new-loan/:id', (req, res) => {
 });
 
 
+app.delete("/loans/:loanId", (req, res) => {
+    const loan_id = req.params.loanId;
+    const sql = `DELETE from loans WHERE loan_id=${loan_id}`;
+  
+    db.serialize(() => {
+      db.exec(sql, (error) => {
+        if(error) {
+          return sendErrorResponse(res, "Can't delete the loan")
+        } else {
+          res.json({
+            status: true,
+            message: "Loan deleted..."
+          })
+        }
+      })
+    })
+  
+  })
+
+
 function sendErrorResponse(response, errorMessage) {
     return response.status(400).json({
         status: false,
@@ -183,6 +203,6 @@ function sendErrorResponse(response, errorMessage) {
     });
 };
 
-app.listen(3000, () => {
+app.listen(4000, () => {
     console.log(`server running on http://localhost:3000`)
 });
